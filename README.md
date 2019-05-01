@@ -12,6 +12,7 @@
 ## 如何使用
 
 * 1、新建一个JavaBean用于接收excel内容，并继承ExcelRow基础类,如：新建MyRow.java
+
 ```java
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.wuyue.excel.ExcelRow;
@@ -41,6 +42,7 @@ public class MyRow extends ExcelRow {
 ```
 
 * 2、调用ExcelUtil.read方法,获取excel内容
+
 ```java
     File file = new File("D:\\1.xlsx");
     FileInputStream fileInputStream = new FileInputStream(file);
@@ -49,6 +51,7 @@ public class MyRow extends ExcelRow {
 ```
 
 * 3、主业务功能代码使用“行”内容的校验结果
+
 ```java
     rows.forEach(row -> {
         // 行号，从0开始
@@ -58,7 +61,13 @@ public class MyRow extends ExcelRow {
         // 校验结果内容
         System.out.println(", message:" + row.getValidateMessage());
     });
-   当D:\\1.xlsx的内容为xxx时，结果：<br/>
+```
+当D:\\1.xlsx的内容为如下时<br/>
+![text](https://github.com/Felix0525/assets/blob/master/20190501-0001.png?raw=true)
+
+输出结果如下：<br/>
+
+```java
     Row number:1, validate code:-1, message:不是一个合法的电子邮件地址
     Row number:2, validate code:0, message:null
     Row number:3, validate code:0, message:null
