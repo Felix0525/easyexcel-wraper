@@ -4,7 +4,7 @@
 
 一个方便读取excel内容，且可以使用注解进行内容验证的包装工具
 
-## MaHua有哪些功能？
+## easyexcel-wraper有哪些功能？
 
 * 在easyexcel的基础上进行封装，方便读取excel内容，避免在主业务代码中嵌入重复繁琐的样本代码
 * 使用强大的Hibernate-validator验证框架，支持诸如@NotBlank,@NotDuiplicate的注解
