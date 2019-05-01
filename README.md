@@ -70,6 +70,6 @@ public class MyRow extends ExcelRow {
 ```java
     Row number:1, validate code:-1, message:不是一个合法的电子邮件地址
     Row number:2, validate code:0, message:null
-    Row number:3, validate code:0, message:null
+    Row number:3, validate code:1, message:Duplicate field
     Row number:4, validate code:1, message:Duplicate field
 ```
