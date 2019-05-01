@@ -29,38 +29,39 @@ public class BaseEventListener<T extends ExcelRow> extends AnalysisEventListener
 
     @Override
     public void invoke(T r, AnalysisContext analysisContext) {
-        Set<ConstraintViolation<T>> validateSet = ExcelValidator.getValidator().validate(r, Default.class);
-        if (validateSet != null && !validateSet.isEmpty()) {
-            ConstraintViolation<T> constraint = validateSet.stream().findAny().orElse(null);
-            r.setValidteCode(-1);
-            r.setValidateMessage(constraint.getMessage());
-        } else {
-            for (Field field : fields) {
-                String name = field.getName();
-                String val = null;
-                try {
-                    field.setAccessible(true);
-                    val = (String) field.get(r);
-                    field.setAccessible(false);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                if (field.isAnnotationPresent(NotDuplicate.class)) {
-                    if (fieldMap.containsKey(name)) {
-                        if (fieldMap.get(name).contains(val)) {
-                            NotDuplicate notDuplicate = field.getAnnotation(NotDuplicate.class);
-                            r.setValidteCode(notDuplicate.code());
-                            r.setValidateMessage(notDuplicate.message());
-                            break;
-                        } else {
-                            fieldMap.get(name).add(val);
-                        }
+        for (Field field : fields) {
+            String name = field.getName();
+            String val = null;
+            try {
+                field.setAccessible(true);
+                val = (String) field.get(r);
+                field.setAccessible(false);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            if (field.isAnnotationPresent(NotDuplicate.class)) {
+                if (fieldMap.containsKey(name)) {
+                    if (fieldMap.get(name).contains(val)) {
+                        NotDuplicate notDuplicate = field.getAnnotation(NotDuplicate.class);
+                        r.setValidteCode(notDuplicate.code());
+                        r.setValidateMessage(notDuplicate.message());
+                        break;
                     } else {
-                        Set<String> vals = new HashSet<>();
-                        vals.add(val);
-                        fieldMap.put(name, vals);
+                        fieldMap.get(name).add(val);
                     }
+                } else {
+                    Set<String> vals = new HashSet<>();
+                    vals.add(val);
+                    fieldMap.put(name, vals);
                 }
+            }
+        }
+        if (r.getValidteCode() != 0) {
+            Set<ConstraintViolation<T>> validateSet = ExcelValidator.getValidator().validate(r, Default.class);
+            if (validateSet != null && !validateSet.isEmpty()) {
+                ConstraintViolation<T> constraint = validateSet.stream().findAny().orElse(null);
+                r.setValidteCode(-1);
+                r.setValidateMessage(constraint.getMessage());
             }
         }
         r.setRowNum(analysisContext.getCurrentRowNum());
