@@ -7,7 +7,7 @@
 ## easyexcel-wraper有哪些功能？
 
 * 在easyexcel的基础上进行封装，方便读取excel内容，避免在主业务代码中嵌入重复繁琐的样本代码
-* 使用强大的Hibernate-validator验证框架，支持诸如@NotBlank,@NotDuiplicate的注解
+* 支持Hibernate-validator验证框架，可使用诸如@NotBlank,@NotDuiplicate的注解
 
 ## 如何使用
 
@@ -74,7 +74,7 @@ public class MyRow extends ExcelRow {
 
 ```java
     [MyRow(name=felix, email=5401142), MyRow(name=wuyue, email=540114289@qq.com), MyRow(name=felix, email=null), MyRow(name=wuyue, email=null)]
-    Row number:1, validate code:0, message:null
+    Row number:1, validate code:2, message:不是一个合法的电子邮件地址
     Row number:2, validate code:0, message:null
     Row number:3, validate code:1, message:Duplicate field
     Row number:4, validate code:1, message:Duplicate field
