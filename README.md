@@ -16,7 +16,7 @@
 ```java
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.wuyue.excel.ExcelRow;
-import com.wuyue.excel.NotDuplicate;
+import com.wuyue.excel.validate.NotDuplicate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +30,7 @@ public class MyRow extends ExcelRow {
 
     @ExcelProperty(index = 0)
     @NotDuplicate
-    @NotBlank
+    @NotBlank(message = "名称不能为空")
     private String name;
 
     @ExcelProperty(index = 1)
@@ -46,18 +46,23 @@ public class MyRow extends ExcelRow {
 ```java
     File file = new File("D:\\1.xlsx");
     FileInputStream fileInputStream = new FileInputStream(file);
-    List<MyRow> rows = ExcelUtil.getInstance().read(fileInputStream, MyRow.class);
-    System.out.println(rows);
+    List<MyRow> rows = ExcelReader.builder()
+            .inputStream(fileInputStream)
+            .sheetNo(1)
+            .headLineMun(1)
+            .build()
+            .read(MyRow.class);
 ```
 
 * 3、主业务功能代码使用“行”内容的校验结果
 
 ```java
+    System.out.println(rows);
     rows.forEach(row -> {
-        // 行号，从0开始
+        // 行号，如果要提示实际excel行号，应该要加上headLineMun的值
         System.out.print("Row number:" + row.getRowNum());
         // 校验结果代码(0为正常)
-        System.out.print(", validate code:" + row.getValidteCode());
+        System.out.print(", validate code:" + row.getValidateCode());
         // 校验结果内容
         System.out.println(", message:" + row.getValidateMessage());
     });
@@ -68,7 +73,8 @@ public class MyRow extends ExcelRow {
 输出结果如下：<br/>
 
 ```java
-    Row number:1, validate code:-1, message:不是一个合法的电子邮件地址
+    [MyRow(name=felix, email=5401142), MyRow(name=wuyue, email=540114289@qq.com), MyRow(name=felix, email=null), MyRow(name=wuyue, email=null)]
+    Row number:1, validate code:0, message:null
     Row number:2, validate code:0, message:null
     Row number:3, validate code:1, message:Duplicate field
     Row number:4, validate code:1, message:Duplicate field
